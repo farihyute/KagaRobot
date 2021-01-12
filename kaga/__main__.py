@@ -93,12 +93,17 @@ buttons += [
             text="Support 🎗️", url="https://t.me/ZeroBotSupport"
         ),
         InlineKeyboardButton(
-            text="Channel 📢", url="https://t.me/HayakaRyuUpdates"
+            text="Channel 📢Source 💻", url="https://t.me/HayakaRyuUpdates"
         ),
     ]
 ]
 
-
+buttons += [
+        InlineKeyboardButton(
+            text="Source 💻", url="https://github.com/HayakaRyu/Kaga"
+        ),
+    ]
+]
 
 HELP_STRINGS = f"""
 Halo! Nama saya adalah *{dispatcher.bot.first_name}*.
