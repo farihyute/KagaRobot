@@ -99,6 +99,7 @@ buttons += [
 ]
 
 buttons += [
+    [
         InlineKeyboardButton(
             text="Source 💻", url="https://github.com/HayakaRyu/Kaga"
         ),
