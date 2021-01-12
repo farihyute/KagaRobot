@@ -93,7 +93,7 @@ buttons += [
             text="Support 🎗️", url="https://t.me/ZeroBotSupport"
         ),
         InlineKeyboardButton(
-            text="Channel 📢Source 💻", url="https://t.me/HayakaRyuUpdates"
+            text="Channel 📢", url="https://t.me/HayakaRyuUpdates"
         ),
     ]
 ]
