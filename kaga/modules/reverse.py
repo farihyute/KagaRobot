@@ -103,7 +103,7 @@ def reverse(update, context):
             xx = context.bot.send_message(
                 chat_id,
                 "Gambar berhasil diunggah ke Google."
-                "\nMencari sumber sekarang. Mungkin.",
+                "\nSedang mencari sumber sekarang.",
                 reply_to_message_id=rtmid,
             )
         else:
