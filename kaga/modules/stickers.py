@@ -223,7 +223,7 @@ def kang(update, context):
                     )
                 print(e)
 
-    elif args:
+    elif args and msg.reply_to_message:
         try:
             try:
                 urlemoji = msg.text.split(" ")
