@@ -44,7 +44,7 @@ from kaga.modules.sql import warns_sql as sql
 
 WARN_HANDLER_GROUP = 9
 CURRENT_WARNING_FILTER_STRING = (
-    "<b>Filter peringatan saat ini dalam obrolan ini</b>\n"
+    "<b>Current warning filters in this chat:</b>\n"
 )
 
 
@@ -53,13 +53,13 @@ def warn(
     user: User, chat: Chat, reason: str, message: Message, warner: User = None
 ) -> str:
     if is_user_admin(chat, user.id):
-        message.reply_text("Admin sialan, bahkan tidak bisa diperingatkan!")
+        message.reply_text("Damn admins, can't even be warned!")
         return ""
 
     if warner:
         warner_tag = mention_html(warner.id, warner.first_name)
     else:
-        warner_tag = "Filter peringatan otomatis."
+        warner_tag = "Automated warn filter."
 
     limit, soft_warn = sql.get_warn_setting(chat.id)
     num_warns, reasons = sql.warn_user(user.id, chat.id, reason)
@@ -67,13 +67,13 @@ def warn(
         sql.reset_warns(user.id, chat.id)
         if soft_warn:  # kick
             chat.unban_member(user.id)
-            reply = "Itu {} peringatan, {} telah ditendang!".format(
+            reply = "That's {} warnings, {} has been kicked!".format(
                 limit, mention_html(user.id, user.first_name)
             )
 
         else:  # ban
             chat.kick_member(user.id)
-            reply = "tu {} peringatan, {} telah dilarang!".format(
+            reply = "That's{} warnings, {} has been banned!".format(
                 limit, mention_html(user.id, user.first_name)
             )
 
@@ -87,9 +87,9 @@ def warn(
             "<b>{}:</b>"
             "\n#WARN_BAN"
             "\n<b>Admin:</b> {}"
-            "\n<b>Pengguna:</b> {} (<code>{}</code>)"
-            "\n<b>Alasan:</b> {}"
-            "\n<b>Jumlah:</b> <code>{}/{}</code>".format(
+            "\n<b>User:</b> {} (<code>{}</code>)"
+            "\n<b>Reason:</b> {}"
+            "\n<b>Counts:</b> <code>{}/{}</code>".format(
                 html.escape(chat.title),
                 warner_tag,
                 mention_html(user.id, user.first_name),
@@ -105,18 +105,18 @@ def warn(
             [
                 [
                     InlineKeyboardButton(
-                        "Hapus peringatan ⚠️",
+                        "Remove warn ⚠️",
                         callback_data="rm_warn({})".format(user.id),
                     )
                 ]
             ]
         )
 
-        reply = "Pengguna {} memiliki {}/{} peringatan ... hati-hati!".format(
+        reply = "User {} has {}/{} warnings... watch out!".format(
             mention_html(user.id, user.first_name), num_warns, limit
         )
         if reason:
-            reply += "\nAlasan peringatan terakhir:\n{}".format(html.escape(reason))
+            reply += "\nReason for last warn:\n{}".format(html.escape(reason))
 
         log_reason = (
             "<b>{}:</b>"
@@ -140,7 +140,7 @@ def warn(
             reply, reply_markup=keyboard, parse_mode=ParseMode.HTML
         )
     except BadRequest as excp:
-        if excp.message == "Pesan balasan tidak ditemukan":
+        if excp.message == "Reply message not found":
             # Do not reply
             message.reply_text(
                 reply,
@@ -166,7 +166,7 @@ def button(update, context):
         res = sql.remove_warn(user_id, chat.id)
         if res:
             update.effective_message.edit_text(
-                "Peringatan terakhir dihapus oleh {}.".format(
+                "Last warn removed by {}.".format(
                     mention_html(user.id, user.first_name)
                 ),
                 parse_mode=ParseMode.HTML,
@@ -187,7 +187,7 @@ def button(update, context):
             )
         else:
             update.effective_message.edit_text(
-                "Pengguna ini sudah tidak memiliki peringatan.", parse_mode=ParseMode.HTML
+                "This user already has no warns.", parse_mode=ParseMode.HTML
             )
 
     return ""
@@ -221,7 +221,7 @@ def warn_user(update, context):
                 chat.get_member(user_id).user, chat, reason, message, warner
             )
     else:
-        message.reply_text("Tidak ada pengguna yang ditunjuk!")
+        message.reply_text("No user was designated!")
     return ""
 
 
@@ -238,7 +238,7 @@ def reset_warns(update, context):
 
     if user_id:
         sql.reset_warns(user_id, chat.id)
-        message.reply_text("Peringatan telah disetel ulang!")
+        message.reply_text("Warnings have been reset!")
         warned = chat.get_member(user_id).user
         return (
             "<b>{}:</b>"
@@ -252,7 +252,7 @@ def reset_warns(update, context):
             )
         )
     else:
-        message.reply_text("Tidak ada pengguna yang telah ditunjuk!")
+        message.reply_text("No user has been designated!")
     return ""
 
 
@@ -269,7 +269,7 @@ def remove_warns(update, context):
 
     if user_id:
         sql.remove_warn(user_id, chat.id)
-        message.reply_text("Peringatan terakhir telah dihapus!")
+        message.reply_text("Last warn has been removed!")
         warned = chat.get_member(user_id).user
         return (
             "<b>{}:</b>"
@@ -284,7 +284,7 @@ def remove_warns(update, context):
             )
         )
     else:
-        message.reply_text("Tidak ada pengguna yang ditunjuk!")
+        message.reply_text("No user has been designated!")
     return ""
 
 
@@ -316,11 +316,11 @@ def warns(update, context):
 
         if reasons:
             if conn:
-                text = "Pengguna ini memiliki {}/{} peringatan, dalam * {} * karena alasan berikut:".format(
+                text = "This user has {}/{} warnings, in *{}* for the following reasons:".format(
                     num_warns, limit, chat_name
                 )
             else:
-                text = "Pengguna ini memiliki {}/{} peringatan, karena alasan berikut:".format(
+                text = "This user has {}/{} warnings, for the following reasons:".format(
                     num_warns,
                     limit,
                 )
@@ -333,14 +333,14 @@ def warns(update, context):
                 update.effective_message.reply_text(msg, parse_mode="markdown")
         else:
             update.effective_message.reply_text(
-                "Pengguna memiliki peringatan {}/{}, tapi tidak ada alasan untuk itu.".format(
+                "User has {}/{} warnings, but no reasons for any of them.".format(
                     num_warns, limit
                 ),
                 parse_mode="markdown",
             )
     else:
         update.effective_message.reply_text(
-            "Pengguna ini tidak mendapat peringatan apa pun!"
+            "This user hasn't got any warnings!"
         )
 
 
@@ -387,7 +387,7 @@ def add_warn_filter(update, context):
     sql.add_warn_filter(chat_id, keyword, content)
 
     update.effective_message.reply_text(
-        "Filter peringatan ditambahkan untuk `{}` di *{}*!".format(keyword, chat_name),
+        "Warn filter added for `{}` in *{}*!".format(keyword, chat_name),
         parse_mode="markdown",
     )
     raise DispatcherHandlerStop
@@ -425,17 +425,17 @@ def remove_warn_filter(update, context):
     chat_filters = sql.get_chat_warn_triggers(chat_id)
 
     if not chat_filters:
-        msg.reply_text("Tidak ada filter peringatan yang aktif di sini!")
+        msg.reply_text("No warning filters are active here!")
         return
 
     for filt in chat_filters:
         if filt == to_remove:
             sql.remove_warn_filter(chat_id, to_remove)
-            msg.reply_text("YYa, saya akan berhenti memperingatkan orang untuk ituep, I'll stop warning people for that.")
+            msg.reply_text("Yep, I'll stop warning people for that.")
             raise DispatcherHandlerStop
 
     msg.reply_text(
-        "Itu bukan filter peringatan saat ini - klik: /warnlist untuk semua filter peringatan aktif."
+        "That's not a current warning filter - click: /warnlist for all active warning filters."
     )
 
 
@@ -456,7 +456,7 @@ def list_warn_filters(update, context):
 
     if not all_handlers:
         update.effective_message.reply_text(
-            "Tidak ada filter peringatan yang aktif di sini!"
+            "No warning filters are active here!"
         )
         return
 
@@ -519,11 +519,11 @@ def set_warn_limit(update, context) -> str:
     if args:
         if args[0].isdigit():
             if int(args[0]) < 3:
-                msg.reply_text("Batas peringatan minimum adalah 3!")
+                msg.reply_text("The minimum warn limit is 3!")
             else:
                 sql.set_warn_limit(chat_id, int(args[0]))
                 msg.reply_text(
-                    "Memperbarui batas peringatan menjadi `{}` di *{}*".format(
+                    "Updated the warn limit to `{}` in *{}*".format(
                         escape_markdown(args[0]), chat_name
                     ),
                     parse_mode="markdown",
@@ -539,12 +539,12 @@ def set_warn_limit(update, context) -> str:
                     )
                 )
         else:
-            msg.reply_text("Beri saya nomor sebagai argumen!")
+            msg.reply_text("Give me a number as an arg!")
     else:
         limit, _ = sql.get_warn_setting(chat_id)
 
         msg.reply_text(
-            "Peringatan saat ini dalam batas {} adalah {}".format(chat_name, limit)
+            "The current warn in {} limit is {}".format(chat_name, limit)
         )
     return ""
 
@@ -571,11 +571,11 @@ def set_warn_strength(update, context):
     if args:
         if args[0].lower() in ("on", "yes"):
             sql.set_warn_strength(chat_id, False)
-            msg.reply_text("Terlalu banyak peringatan sekarang akan mengakibatkan pelarangan!")
+            msg.reply_text("Too many warns will now result in a ban!")
             return (
                 "<b>{}:</b>\n"
                 "<b>Admin:</b> {}\n"
-                "Telah mengaktifkan peringatan yang kuat. Pengguna akan diblokir.".format(
+                "Has enabled strong warns. Users will be banned.".format(
                     chat_name, mention_html(user.id, user.first_name)
                 )
             )
@@ -583,28 +583,28 @@ def set_warn_strength(update, context):
         elif args[0].lower() in ("off", "no"):
             sql.set_warn_strength(chat_id, True)
             msg.reply_text(
-                "Terlalu banyak peringatan sekarang akan menghasilkan tendangan! Pengguna akan dapat bergabung lagi setelah itu."
+                "Too many warns will now result in a kick! Users will be able to join again after."
             )
             return (
                 "<b>{}:</b>\n"
                 "<b>Admin:</b> {}\n"
-                "Telah menonaktifkan peringatan yang kuat. Pengguna hanya akan ditendang.".format(
+                "Has disabled strong warns. Users will only be kicked.".format(
                     chat_name, mention_html(user.id, user.first_name)
                 )
             )
 
         else:
-            msg.reply_text("Saya hanya mengerti on/yes/no/off!")
+            msg.reply_text("I only understand on/yes/no/off!")
     else:
         _, soft_warn = sql.get_warn_setting(chat_id)
         if soft_warn:
             msg.reply_text(
-                "Peringatan saat ini disetel untuk *menendang* pengguna ketika mereka melebihi batas.",
+                "Warns are currently set to *kick* users when they exceed the limits.",
                 parse_mode=ParseMode.MARKDOWN,
             )
         else:
             msg.reply_text(
-                "Peringatan saat ini disetel untuk *melarang* pengguna ketika mereka melebihi batas.",
+                "Warns are currently set to *ban* users when they exceed the limits.",
                 parse_mode=ParseMode.MARKDOWN,
             )
     return ""
@@ -612,8 +612,8 @@ def set_warn_strength(update, context):
 
 def __stats__():
     return (
-        "× {} keseluruhan memperingatkan, di {} obrolan.\n"
-        "× {} peringatkan filter, di {} obrolan.".format(
+        "× {} overall warns, across {} chats.\n"
+        "× {} warn filters, across {} chats.".format(
             sql.num_warns(),
             sql.num_warn_chats(),
             sql.num_warn_filters(),
@@ -636,12 +636,37 @@ def __chat_settings__(chat_id, user_id):
     num_warn_filters = sql.num_warn_chat_filters(chat_id)
     limit, soft_warn = sql.get_warn_setting(chat_id)
     return (
-        "Obrolan ini memiliki filter peringatan `{}`. Dibutuhkan `{}` memperingatkan "
-        "sebelum pengguna mendapatkannya *{}*.".format(
+        "This chat has `{}` warn filters. It takes `{}` warns "
+        "before the user gets *{}*.".format(
             num_warn_filters, limit, "kicked" if soft_warn else "banned"
         )
     )
 
+
+__help__ = """
+ If you're looking for a way to automatically warn users when they say certain things, use the /addwarn command.
+ An example of setting multiword warns filter:
+ × `/addwarn "very angry" This is an angry user`
+ This will automatically warn a user that triggers "very angry", with reason of 'This is an angry user'.
+ An example of how to set a new multiword warning:
+`/warn @user Because warning is fun`
+
+ × /warns <userhandle>: Gets a user's number, and reason, of warnings.
+ × /warnlist: Lists all current warning filters
+
+*Admin only:*
+ × /warn <userhandle>: Warns a user. After 3 warns, the user will be banned from the group. Can also be used as a reply.
+ × /resetwarn <userhandle>: Resets the warnings for a user. Can also be used as a reply.
+ × /rmwarn <userhandle>: Removes latest warn for a user. It also can be used as reply.
+ × /unwarn <userhandle>: Same as /rmwarn
+ × /addwarn <keyword> <reply message>: Sets a warning filter on a certain keyword. If you want your keyword to \
+be a sentence, encompass it with quotes, as such: `/addwarn "very angry" This is an angry user`.
+ × /nowarn <keyword>: Stops a warning filter
+ × /warnlimit <num>: Sets the warning limit
+ × /strongwarn <on/yes/off/no>: If set to on, exceeding the warn limit will result in a ban. Else, will just kick.
+"""
+
+__mod_name__ = "Warnings"
 
 WARN_HANDLER = CommandHandler(
     "warn", warn_user, pass_args=True, filters=Filters.chat_type.groups, run_async=True
