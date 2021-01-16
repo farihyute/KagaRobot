@@ -405,7 +405,7 @@ def getlink(update, context):
     if args:
         pattern = re.compile(r"-\d+")
     else:
-        message.reply_text("Anda sepertinya tidak mengacu pada obrolan apa pun.")
+       return message.reply_text("Anda sepertinya tidak mengacu pada obrolan apa pun.")
     links = "Undang tautan:\n"
     for chat_id in pattern.findall(message.text):
         try:
