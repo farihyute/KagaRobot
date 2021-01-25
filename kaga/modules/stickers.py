@@ -265,7 +265,7 @@ def kang(update, context):
                 parse_mode=ParseMode.MARKDOWN,
             )
         except OSError as e:
-            msg.reply_text("I can only kang images m8.")
+            msg.reply_text("Saya hanya bisa kang gambar m8.")
             print(e)
             return
         except TelegramError as e:
@@ -352,7 +352,7 @@ def makepack_internal(
             success = context.bot.create_new_sticker_set(
                 user.id,
                 packname,
-                f"{name}s kang pack" + extra_version,
+                f"{name} kang pack" + extra_version,
                 png_sticker=png_sticker,
                 emojis=emoji,
             )
@@ -360,7 +360,7 @@ def makepack_internal(
             success = context.bot.create_new_sticker_set(
                 user.id,
                 packname,
-                f"{name}s animated kang pack" + extra_version,
+                f"{name} animated kang pack" + extra_version,
                 tgs_sticker=tgs_sticker,
                 emojis=emoji,
             )
@@ -406,7 +406,7 @@ def makepack_internal(
         )
     else:
         msg.reply_text(
-            "Gagal membuat paket stiker. Mungkin karena blek mejik."
+            "Gagal membuat paket stiker."
         )
 
 
