@@ -309,8 +309,8 @@ def __migrate__(old_chat_id, new_chat_id):
 def __chat_settings__(chat_id, user_id):
     welcome_pref, _, _ = sql.get_welc_pref(chat_id)
     goodbye_pref, _, _ = sql.get_gdbye_pref(chat_id)
-    return "This chat has it's welcome preference set to `{}`.\n" \
-           "It's goodbye preference is `{}`.".format(welcome_pref, goodbye_pref)
+    return "Obrolan ini memiliki preferensi selamat datang yang disetel ke `{}`.\n" \
+           "Ini preferensi selamat tinggal `{}`.".format(welcome_pref, goodbye_pref)
 
 __help__ = """
 {}
@@ -328,7 +328,7 @@ Perintah:
  - /cas: Info tentang CAS. (Apa itu CAS?)
 """
 
-__mod_name__ = "Combot Anti-Spam"
+__mod_name__ = "CAS"
 
 SETCAS_HANDLER = CommandHandler("setcas", setcas, filters=Filters.group, run_async=True)
 GETCAS_HANDLER = CommandHandler("getcas", get_current_setting, filters=Filters.group, run_async=True)
