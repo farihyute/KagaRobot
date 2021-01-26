@@ -6,6 +6,7 @@ __help__ = """
 *Black Out*
  Originally Made By [Ayan Ansari](t.me/TechnoAyanOfficial)
   × /blackout <text>: Terapkan Blackout Style ke teks Anda.
+  
 *GPS*
   × /gps: <lokasi> Dapatkan lokasi GPS.
   
@@ -19,6 +20,7 @@ __help__ = """
   × /addnsfw: Mengaktifkan mode NSFW
   × /rmnsfw: MEnonaktifkan mode NSFW
   × /nekoshelp: lihat lebih banyak command.
+  
 *React*
   × /react: Mengirim react acak.
   
