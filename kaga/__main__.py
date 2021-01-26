@@ -77,7 +77,7 @@ buttons = [
 buttons += [
     [
         InlineKeyboardButton(
-            text="Help & Commands ❔",
+            text="Bantuan ❔",
             url=f"t.me/{dispatcher.bot.username}?start=help",
         ),
         InlineKeyboardButton(
