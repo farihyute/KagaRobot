@@ -18,8 +18,10 @@ Dapat ditemukan di telegram sebagai [Kaga](https://t.me/KagaRobot).
 
 Bergabunglah dengan [Dukungan Grup](https://t.me/ZeroBotSupport) jika Anda hanya ingin mengikuti info terbaru tentang fitur atau pengumuman baru.
 
-## Deploy to Heroku
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
+## Deploy to heroku
+ `
+
+  [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/farihyute/roxypantsu) 
 
 ## Credits
 
