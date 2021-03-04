@@ -22,7 +22,19 @@
          "description": "Your bot token. Get one from @BotFather duh",
          "required": true,
          "value": ""
-      },    
+         
+       },     
+      "API_HASH": {
+         "description": "Your Api hash, empty this field if you dont have one.",
+         "required": true,
+         "value": "2ea965cd0674f1663ec291313edcd333"
+         
+          "APP_ID": {
+         "description": "Your Api id, empty this field if you dont have one.",
+         "required": true,
+         "value": "2374504" 
+
+       },
       "DATABASE_URI": {
          "description": "Your postgres sql db, empty this field if you dont have one.",
          "required": false,
@@ -47,6 +59,7 @@
          "required": true,
          "value": "ZeroBotSupport"
       },
+
       "DEV_USERS": {
          "description": "ID of users who are Devs of your bot (can use /py etc.). If you are a noob and would come and bother Saitama support then keep the current ID's here at they are and add yours.",
          "required": false,
